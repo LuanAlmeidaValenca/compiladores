@@ -1,0 +1,87 @@
+-- leque de operações matemáticas com triângulos
+
+-- Cálculo do valor absoluto da diferença entre dois lados
+[ numero ModuloDaDiferenca [ numero l1 | numero l2 ] :
+    [
+        [ numero diferenca [ l1 - l2 ] ]
+        [
+            || diferenca << 0 = -diferenca
+            || # = diferenca
+        ]
+    ]
+]
+
+-- condição de existência do triângulo
+[ booleano ExisteTriangulo [ numero ladoA | numero ladoB | numero ladoC ] :
+	[
+		[ booleano somaA [ladoA << ladoB + ladoC] ]
+		[ booleano somaB [ladoB << ladoA + ladoC] ]
+		[ booleano somaC [ladoC << ladoA + ladoB] ]
+
+		[ booleano difA [ladoA >> ModuloDaDiferenca [ladoB | ladoC] ] ]
+		[ booleano difB [ladoB >> ModuloDaDiferenca [ladoA | ladoC] ] ]
+		[ booleano difC [ladoC >> ModuloDaDiferenca [ladoA | ladoB] ] ]
+
+		|| somaA ^ somaB ^ somaC ^ difA ^ difB ^ difC == V
+		|| # = F
+	]
+]
+
+/-- se o triângulo NÃO é retângulo (sei que isso não faz o menor sentido 
+	mas é só pra usar o não-unário) --/
+[ booleano NaoEhRetangulo [numero ladoA | numero ladoB | numero ladoC ] :
+	[
+		[ booleano possibilidade1 [ladoA´2 == ladoB´2 + ladoC´2] ]
+		[ booleano possibilidade2 [ladoB´2 == ladoA´2 + ladoC´2] ]
+		[ booleano possibilidade3 [ladoC´2 == ladoA´2 + ladoB´2] ]
+
+		¬<possibilidade1 v possibilidade2 v possibilidade3>
+	]
+]
+
+-- cálculo da área do triângulo a partir da altura e base
+[ numero AreaTriangulo [ numero altura | numero base ] :
+	[ base . altura / 2]
+]
+
+-- cálculo da hipotenusa
+[ numero Hipotenusa [ numero catetoA | numero catetoB ] :
+	[
+		[ numero quadradoHipotenusa [catetoA´2 + catetoB´2] ]
+		quadradoHipotenusa´<1/2>
+	]
+]
+
+-- cálculo de um lado conhecendo os outros dois e o ângulo oposto
+[ numero CalculoLado [numero ladoA | numero ladoB | numero anguloOposto] :
+	[
+		[ numero cosseno [ Seno[anguloOposto] ] ]
+		[ numero quadradoLado [ladoA´2 + ladoB´2 - 2 . ladoB . ladoC . cosseno] ]
+		-- agora retorna a raíz
+		quadradoLado´<1/2>
+	]
+]
+
+++ [ numero Resultado []:
+	[
+   		[ numero a [3] ]
+   		[ numero b [3] ]
+   		[ numero c [5] ]
+   		[ numero angulooposto [112,89] ]
+     
+   		[
+			|| ExisteTriangulo [a | b | c] == V = [
+				[ numero area [AreaTriangulo [a | b | c]]]
+				[ numero calculolado [CalculoLado[a | b | angulooposto]]]
+        		[
+					|| NaoEhRetangulo [a | b | c] == F = [
+                  		[ numero hipotenusa [Hipotenusa[a | b]]]
+						hipotenusa
+        			]    
+					|| # = calculolado
+				]
+     		]
+   			|| # = 0
+		]
+   	]
+]

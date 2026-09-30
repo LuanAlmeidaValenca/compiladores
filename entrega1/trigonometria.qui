@@ -1,0 +1,32 @@
+[numero calc_trig [numero angulo]:
+    [
+        [ numero sen [Seno[angulo]]]
+        [ numero cos [Cosseno[angulo]]]
+        [ numero tan [Tangente[angulo]]]
+        <sen + cos> + tan
+    ]
+]
+
+[numero analisa [numero base | numero divisor]:
+    [
+        [ numero num_log [Logaritmo[base]]]
+        [ numero divisor_int [base // divisor]]
+        [
+            || <divisor_int >> 0> = num_log + divisor_int
+            || # = num_log
+        ]
+    ]
+]
+
+[ numero ExecutaOperacao [ numero Operacao [ numero ] | numero valorAngulo ] :
+	[ Operacao[valorAngulo] ]
+]
+
+++ [numero Principal []:
+	[
+        	[ numero resultado_trig [ ExecutaOperacao[calc_trig | 0,0] ] ]
+        	[ numero resultado_analise [ analisa[100 | 3] ] ]
+        
+        	resultado_trig + resultado_analise
+    	]
+]

@@ -1,0 +1,25 @@
+[ booleano EhPotenciaDeDois [ numero numeroAvaliado ] :
+	[
+		|| numeroAvaliado == 1 = V
+		|| numeroAvaliado << 1 = F
+		|| <numeroAvaliado \ 2> >> 0 = F
+		|| # = EhPotenciaDeDois [ numeroAvaliado // 2 ]
+	]
+]
+
+++ [ numero Principal [ ] :
+	[
+		[ numero testeA [ 0b10000000 ] ]
+		[ numero testeB [ 0b11110000 ] ]
+		
+		[
+			|| EhPotenciaDeDois [ testeA ] == V = [
+				[
+					|| EhPotenciaDeDois [ testeB ] == F = 1
+					|| # = 0
+				]
+			]
+			|| # = 0
+		]
+	]
+]
