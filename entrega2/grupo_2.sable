@@ -13,6 +13,7 @@ Helpers
     lf = 10;
     tab = 9;
     espaco_char = ' ';
+    virgula = ',';
     
     /* Conjunto para Comentários */
     qualquer_caractere = [0 .. 65535];
@@ -33,29 +34,36 @@ Tokens
     r_colchete = ']';
     dois_pontos = ':';
     barra_vert = '|';
+    barra_vert_dupla = '||';
     sustenido = '#';
-    trema = '¨' | 168;
 
     /* Operadores Aritméticos */
     mais = '+';
     menos = '-';
+    multiplicacao = '*';
+    resto = '%';
+    divisao_int = '//';
     ponto = '.';
     barra = '/';
     contra_barra = '\'; /* esse bloco de comentário serve apenas para resolver um bug visual da extensão sable-helper'*/
     potencia = 180 | 8216 | 8217 | '´';
 
     /* Operadores Relacionais */
+    igualdade = '==';
     igual = '=';
-    menor = '<';
-    maior = '>';
+    menor = '<<';
+    menor_precedencia = '<';
+    maior = '>>';
+    maior_precedencia = '>';
 
     /* Operadores Lógicos */
     e_logico = '^';
-    nao_logico = 172 | '¬';
+    nao_logico = '¬' | 172 | '~';
     ou_logico = 'v';
 
     /* Numerais */
     numeral_int = digito+ | '0b' digito_bin+;
+    numeral_real = digito+ virgula digito+;
 
     /* Identificadores */
     id_const = letra_mai letra_mai+;
@@ -65,7 +73,7 @@ Tokens
     /* Espaços em Branco e Comentários */
     vazio = (espaco_char | tab | cr | lf)+;
     comentario_linha = '--' [qualquer_caractere - [cr + lf]]* fim_linha?;
-    comentario_bloco = '/--' [qualquer_caractere - '-']* ('-' [qualquer_caractere - ['/' + '-']]*)* '--/';
+    comentario_bloco = '/--' ( [qualquer_caractere - '-'] | '-' [qualquer_caractere - '-'] | '--' [qualquer_caractere - '/'] )* '--/';
 
 Ignored Tokens
     vazio,
