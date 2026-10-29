@@ -1,0 +1,102 @@
+Package quinas;
+
+Helpers
+    /* Caracteres Básicos */
+    digito = ['0' .. '9'];
+    digito_bin = ['0' .. '1'];
+    letra_min = ['a' .. 'z'];
+    letra_mai = ['A' .. 'Z'];
+    letra = letra_min | letra_mai;
+    
+    /* Quebras de linha e Espaços */
+    cr = 13;
+    lf = 10;
+    tab = 9;
+    espaco_char = ' ';
+    virgula = ',';
+    
+    /* Conjunto para Comentários */
+    qualquer_caractere = [0 .. 65535];
+    fim_linha = cr | lf | cr lf;
+
+Tokens
+    /* Palavras Reservadas de Tipos Primitivos */
+    tipo_numero = 'numero';
+    tipo_booleano = 'booleano';
+
+    /* Valores Booleanos */
+    bool_v = 'V';
+    bool_f = 'F';
+
+    /* Delimitadores e Marcadores */
+    ponto_entrada = '++';
+    l_colchete = '[';
+    r_colchete = ']';
+    dois_pontos = ':';
+    barra_vert = '|';
+    barra_vert_dupla = '||';
+    sustenido = '#';
+
+    /* Operadores Aritméticos */
+    mais = '+';
+    menos = '-';
+    multiplicacao = '*';
+    resto = '%';
+    divisao_int = '//';
+    ponto = '.';
+    barra = '/';
+    contra_barra = '\'; /* esse bloco de comentário serve apenas para resolver um bug visual da extensão sable-helper'*/
+    potencia = 180 | 8216 | 8217 | '´';
+
+    /* Operadores Relacionais */
+    igualdade = '==';
+    igual = '=';
+    menor = '<<';
+    menor_precedencia = '<';
+    maior = '>>';
+    maior_precedencia = '>';
+
+    /* Operadores Lógicos */
+    e_logico = '^';
+    nao_logico = '¬' | 172 | '~';
+    ou_logico = 'v';
+
+    /* Numerais */
+    numeral_int = digito+ | '0b' digito_bin+;
+    numeral_real = digito+ virgula digito+;
+
+    /* Identificadores */
+    id_const = letra_mai letra_mai+;
+    id_funcao = letra_mai letra+;
+    id = letra_min letra_min+;
+
+    /* Espaços em Branco e Comentários */
+    vazio = (espaco_char | tab | cr | lf)+;
+    comentario_linha = '--' [qualquer_caractere - [cr + lf]]* fim_linha?;
+    comentario_bloco = '/--' ( [qualquer_caractere - '-'] | '-' [qualquer_caractere - '-'] | '--' [qualquer_caractere - '/'] )* '--/';
+
+Ignored Tokens
+    vazio,
+    comentario_linha,
+    comentario_bloco;
+
+Productions
+programa = dec_funcao;
+
+dec_funcao = ponto_entrada? l_colchete tipo id_funcao l_colchete lista_parametros r_colchete dois_pontos l_colchete exo r_colchete r_colchete
+
+tipo = 
+{numero} tipo_numero |
+{booleano} tipo_booleano;
+
+lista_parametros =
+{vazio} |
+{parametros} parametro separador_parametro*;
+
+separador_parametro = barra_vert parametro;
+
+parametro =
+{tipo_id} tipo id_const |
+{assinatura} assinatura;
+
+assinatura = tipo id_funcao l_colchete parametros_assinatura r_colchete;
