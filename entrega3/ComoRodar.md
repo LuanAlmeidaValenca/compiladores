@@ -41,7 +41,7 @@ java -jar sablecc.jar grupo_2.sable
 
 Este comando será responsável por criar a pasta `/entrega2/quinas/` a partir do `.sable` usado
 
-## 3. Testar o Léxico
+## 3. Testar o Sintático
 
 Feito as etapas anteriores basta editar o arquivo `teste.qui` ou criar outro com a extensão `.qui`, salvar e executar o comando:
 
@@ -49,4 +49,4 @@ Feito as etapas anteriores basta editar o arquivo `teste.qui` ou criar outro com
 java Main <nome-do-arquivo.qui>
 ```
 
-Deverá aparecer no terminal o início da análise léxica e o resultado com base em cada conteúdo adicionado no `.qui`
+Deverá aparecer no terminal o início da análise léxica e o resultado com base em cada conteúdo adicionado no `.qui`. Logo em seguida, aparecerá o resultado da análise sintática também.

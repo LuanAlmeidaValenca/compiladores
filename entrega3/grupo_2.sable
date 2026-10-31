@@ -112,8 +112,46 @@ separador_assinatura = barra_vert parametro_assinatura;
 parametro_assinatura = tipo barra_vert assinatura;
 
 
-/* ISSO AQUI TÁ TODO ERRADO PORQUE VAI CAUSAR MUITA AMBIGUIDADE
 exp = 
+{ou} exp ou_logico exp_e |
+{passa_e} exp_e;
+
+exp_e = 
+{e} exp_e e_logico exp_igual |
+{passa_igual} exp_igual;
+
+exp_igual =
+{equacao} exp_igual igualdade exp_menor |
+{passa_menor} exp_menor;
+
+exp_menor =
+{menor_que} exp_menor menor exp_soma |
+{maior_que} exp_menor maior exp_soma |
+{passa_soma} exp_soma;
+
+exp_soma = 
+{soma} exp_soma mais exp_mult |
+{subtracao} exp_soma menos exp_mult |
+{passa_mult} exp_mult;
+
+exp_mult =
+{multiplicacao} exp_mult multiplicacao exp_potencia |
+{divisao} exp_mult barra exp_potencia |
+{divisao_int} exp_mult divisao_int exp_potencia |
+{resto} exp_mult resto exp_potencia |
+{passa_potencia} exp_potencia;
+
+exp_potencia = 
+{potencia} exp_negacao potencia exp_potencia |
+{passa_negacao} exp_negacao;
+
+exp_negacao = 
+{negacao} nao_logico exp_negacao |
+{negativo} menos exp_base |
+{passa_base} exp_base;
+
+exp_base =
+{parentesis} menor_precedencia exp maior_precedencia |
 {numeral_int} numeral_int |
 {numeral_real} numeral_real |
 {bool_v} bool_v |
@@ -122,23 +160,7 @@ exp =
 {id_const} id_const |
 {bloco_exp} bloco_exp |
 {chamada} chamada |
-{guarda} guarda |
-{parentesis} menor_precedencia exp maior_precedencia | 
-{negativo} menos exp |
-{potencia} [base]:exp potencia [expoente]:exp |
-{soma} [parcela_um]:exp mais [parcela_dois]:exp |
-{subtracao} [minuendo]:exp menos [subtraendo]:exp |
-{multiplicacao} [multiplicando]:exp multiplicacao [multiplicador]:exp |
-{divisao} [dividendo]:exp barra [divisor]:exp |
-{divisao_int} [dividendo_int]:exp divisao_int [divisor_int]:exp |
-{resto} [dividendo_resto]:exp resto [divisor_resto]:exp |
-{equacao} [fator_um]:exp igualdade [fator_dois]:exp |
-{menor_que} [fator_um]:exp menor [fator_dois]:exp |
-{maior_que} [fator_um]:exp maior [fator_dois]:exp |
-{negacao} nao_logico exp |
-{e} [fator_um]:exp e_logico [fator_dois]:exp |
-{ou} [fator_um]:exp ou_logico [fator_dois]:exp;
-*/
+{guarda} guarda;
 
 
 guarda = l_colchete clausula+ senao r_colchete;
@@ -148,9 +170,9 @@ clausula = barra_vert_dupla [condicao]:exp igual [retorno]:exp;
 senao = barra_vert_dupla sustenido igual exp;
 
 
-bloco_exp = l_colchete dec_const+ exp r_colchete;
+bloco_exp = l_colchete dec_cons+ exp r_colchete;
 
-dec_const = [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete;
+dec_cons = [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete;
 
 chamada = id_funcao l_colchete lista_args r_colchete;
 

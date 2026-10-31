@@ -1,4 +1,5 @@
 import quinas.lexer.*;
+import quinas.parser.*;
 import quinas.node.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -18,25 +19,25 @@ public class Main {
                 StandardCharsets.UTF_8
             );
             PushbackReader pbr = new PushbackReader(new BufferedReader(isr), 1024);
+            
+            // Instancia o Lexer
             Lexer lexer = new Lexer(pbr);
-
-            System.out.println("=== Início da Análise Léxica ===");
-            Token token;
             
-            // Percorre os tokens até atingir o EOF
-            while (!((token = lexer.next()) instanceof EOF)) {
-                String nomeToken = token.getClass().getSimpleName().replace("T", "");
-                String lexema = token.getText();
-                int linha = token.getLine();
-                int coluna = token.getPos();
+            // Instancia o Parser passando o Lexer
+            Parser parser = new Parser(lexer);
 
-                System.out.printf("[%03d:%03d] %-20s : '%s'\n", linha, coluna, nomeToken, lexema);
-            }
+            System.out.println("=== Início da Análise Sintática ===");
             
-            System.out.println("=== Análise Léxica Concluída com Sucesso ===");
+            // Inicia a análise. Se o código fonte tiver erro de sintaxe, 
+            // este método lança uma ParserException.
+            Start arvore = parser.parse();
+            
+            System.out.println("=== Análise Sintática Concluída com Sucesso ===");
 
         } catch (LexerException e) {
             System.err.println("\n[ERRO LÉXICO]: " + e.getMessage());
+        } catch (ParserException e) {
+            System.err.println("\n[ERRO SINTÁTICO]: " + e.getMessage());
         } catch (IOException e) {
             System.err.println("\n[ERRO DE LEITURA]: Não foi possível ler o arquivo: " + e.getMessage());
         }

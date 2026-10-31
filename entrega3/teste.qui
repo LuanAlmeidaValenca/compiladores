@@ -1,10 +1,8 @@
-12´3
-booleano numero V F
-¨¬
-\
-CONSTANTE
-Funcao
-
---Comentario linha jw9fhw9q38rf j4nroign90
-/-- Comentário bloco 
-apofjqjfq903jj-3j9efc--/
+++ [ booleano TestaConstante [ ] :
+    [
+        [ 
+            [ numero PI [ 3,14 ] ] 
+            PI >> 3 
+        ]
+    ]
+]
