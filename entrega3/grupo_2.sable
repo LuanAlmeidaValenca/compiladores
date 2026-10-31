@@ -40,12 +40,10 @@ Tokens
     /* Operadores Aritméticos */
     mais = '+';
     menos = '-';
-    multiplicacao = '*';
-    resto = '%';
+    multiplicacao = '.';
+    resto = '\'; /* esse bloco de comentário serve apenas para resolver um bug visual da extensão sable-helper'*/
     divisao_int = '//';
-    ponto = '.';
     barra = '/';
-    contra_barra = '\'; /* esse bloco de comentário serve apenas para resolver um bug visual da extensão sable-helper'*/
     potencia = 180 | 8216 | 8217 | '´';
 
     /* Operadores Relacionais */
@@ -81,13 +79,17 @@ Ignored Tokens
     comentario_bloco;
 
 Productions
-programa = dec_funcao;
+programa = dec_funcao+;
 
-dec_funcao = ponto_entrada? l_colchete tipo id_funcao l_colchete lista_parametros r_colchete dois_pontos l_colchete exo r_colchete r_colchete
+dec_funcao = ponto_entrada? [abre_funcao]:l_colchete tipo id_funcao 
+[colchete_param_l]:l_colchete lista_parametros [colchete_param_r]:r_colchete dois_pontos 
+[colchete_exp_l]:l_colchete exp [colchete_exp_r]:r_colchete [fecha_funcao]:r_colchete;
+
 
 tipo = 
 {numero} tipo_numero |
 {booleano} tipo_booleano;
+
 
 lista_parametros =
 {vazio} |
@@ -96,7 +98,69 @@ lista_parametros =
 separador_parametro = barra_vert parametro;
 
 parametro =
-{tipo_id} tipo id_const |
+{tipo_id} tipo id |
 {assinatura} assinatura;
 
 assinatura = tipo id_funcao l_colchete parametros_assinatura r_colchete;
+
+parametros_assinatura = 
+{vazio} |
+{params_assinaturas} parametro_assinatura separador_assinatura*;
+
+separador_assinatura = barra_vert parametro_assinatura;
+
+parametro_assinatura = tipo barra_vert assinatura;
+
+
+/* ISSO AQUI TÁ TODO ERRADO PORQUE VAI CAUSAR MUITA AMBIGUIDADE
+exp = 
+{numeral_int} numeral_int |
+{numeral_real} numeral_real |
+{bool_v} bool_v |
+{bool_f} bool_f |
+{id} id |
+{id_const} id_const |
+{bloco_exp} bloco_exp |
+{chamada} chamada |
+{guarda} guarda |
+{parentesis} menor_precedencia exp maior_precedencia | 
+{negativo} menos exp |
+{potencia} [base]:exp potencia [expoente]:exp |
+{soma} [parcela_um]:exp mais [parcela_dois]:exp |
+{subtracao} [minuendo]:exp menos [subtraendo]:exp |
+{multiplicacao} [multiplicando]:exp multiplicacao [multiplicador]:exp |
+{divisao} [dividendo]:exp barra [divisor]:exp |
+{divisao_int} [dividendo_int]:exp divisao_int [divisor_int]:exp |
+{resto} [dividendo_resto]:exp resto [divisor_resto]:exp |
+{equacao} [fator_um]:exp igualdade [fator_dois]:exp |
+{menor_que} [fator_um]:exp menor [fator_dois]:exp |
+{maior_que} [fator_um]:exp maior [fator_dois]:exp |
+{negacao} nao_logico exp |
+{e} [fator_um]:exp e_logico [fator_dois]:exp |
+{ou} [fator_um]:exp ou_logico [fator_dois]:exp;
+*/
+
+
+guarda = l_colchete clausula+ senao r_colchete;
+
+clausula = barra_vert_dupla [condicao]:exp igual [retorno]:exp;
+
+senao = barra_vert_dupla sustenido igual exp;
+
+
+bloco_exp = l_colchete dec_const+ exp r_colchete;
+
+dec_const = [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete;
+
+chamada = id_funcao l_colchete lista_args r_colchete;
+
+lista_args = 
+{vazio} |
+{argumentos} arg separador_arg*;
+
+separador_arg = barra_vert arg;
+
+arg = 
+{exp} exp |
+{id_funcao} id_funcao;
+
