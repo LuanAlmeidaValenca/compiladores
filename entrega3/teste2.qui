@@ -1,0 +1,3 @@
+[ numero AplicaOperador [ numero xx | numero yy | numero Op [ numero | numero ] ] :
+    [ Op [ xx | yy ] ]
+]

@@ -109,7 +109,9 @@ parametros_assinatura =
 
 separador_assinatura = barra_vert parametro_assinatura;
 
-parametro_assinatura = tipo barra_vert assinatura;
+parametro_assinatura = 
+  {tipo} tipo |
+  {assinatura} assinatura;
 
 
 exp = 
