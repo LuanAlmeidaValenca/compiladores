@@ -78,113 +78,169 @@ Ignored Tokens
     comentario_linha,
     comentario_bloco;
 
+Abstract Syntax Tree
+    programa = dec_funcao*;
+
+    dec_funcao = ponto_entrada? tipo id_funcao parametro* exp;
+
+    tipo = 
+        {numero} |
+        {booleano};
+
+    parametro = 
+        {tipo_id} tipo id |
+        {assinatura} assinatura;
+
+    assinatura = tipo id_funcao parametro_assinatura*;
+
+    parametro_assinatura = 
+        {tipo} tipo |
+        {assinatura} assinatura;
+
+    exp = 
+        {ou} [esq]:exp [dir]:exp |
+        {e} [esq]:exp [dir]:exp |
+        {igualdade} [esq]:exp [dir]:exp |
+        {menor} [esq]:exp [dir]:exp |
+        {maior} [esq]:exp [dir]:exp |
+        {soma} [esq]:exp [dir]:exp |
+        {subtracao} [esq]:exp [dir]:exp |
+        {multiplicacao} [esq]:exp [dir]:exp |
+        {divisao} [esq]:exp [dir]:exp |
+        {divisao_int} [esq]:exp [dir]:exp |
+        {resto} [esq]:exp [dir]:exp |
+        {potencia} [esq]:exp [dir]:exp |
+        {negacao} exp |
+        {negativo} exp |
+        {parentesis} exp |
+        {numeral_int} numeral_int |
+        {numeral_real} numeral_real |
+        {bool_v} |
+        {bool_f} |
+        {id} id |
+        {id_const} id_const |
+        {bloco_exp} bloco_exp |
+        {chamada} chamada |
+        {guarda} guarda;
+
+    guarda = clausula+ [senao]:exp;
+
+    clausula = [condicao]:exp [retorno]:exp;
+
+    bloco_exp = dec_cons* exp;
+
+    dec_cons = tipo id_const exp;
+
+    chamada = id_funcao arg*;
+
+    arg = 
+        {exp} exp |
+        {id_funcao} id_funcao;
+
 Productions
-programa = dec_funcao+;
+    programa = dec_funcao+;
 
-dec_funcao = ponto_entrada? [abre_funcao]:l_colchete tipo id_funcao 
-[colchete_param_l]:l_colchete lista_parametros [colchete_param_r]:r_colchete dois_pontos 
-[colchete_exp_l]:l_colchete exp [colchete_exp_r]:r_colchete [fecha_funcao]:r_colchete;
+    dec_funcao = ponto_entrada? [abre_funcao]:l_colchete tipo id_funcao 
+    [colchete_param_l]:l_colchete lista_parametros [colchete_param_r]:r_colchete dois_pontos 
+    [colchete_exp_l]:l_colchete exp [colchete_exp_r]:r_colchete [fecha_funcao]:r_colchete;
 
+    tipo = 
+    {numero} tipo_numero |
+    {booleano} tipo_booleano;
 
-tipo = 
-{numero} tipo_numero |
-{booleano} tipo_booleano;
+    lista_parametros =
+    {vazio} |
+    {parametros} parametro separador_parametro*;
 
+    separador_parametro = barra_vert parametro;
 
-lista_parametros =
-{vazio} |
-{parametros} parametro separador_parametro*;
+    parametro =
+    {tipo_id} tipo id |
+    {assinatura} assinatura;
 
-separador_parametro = barra_vert parametro;
+    assinatura = tipo id_funcao l_colchete parametros_assinatura r_colchete;
 
-parametro =
-{tipo_id} tipo id |
-{assinatura} assinatura;
+    parametros_assinatura = 
+    {vazio} |
+    {params_assinaturas} parametro_assinatura separador_assinatura*;
 
-assinatura = tipo id_funcao l_colchete parametros_assinatura r_colchete;
+    separador_assinatura = barra_vert parametro_assinatura;
 
-parametros_assinatura = 
-{vazio} |
-{params_assinaturas} parametro_assinatura separador_assinatura*;
-
-separador_assinatura = barra_vert parametro_assinatura;
-
-parametro_assinatura = 
-  {tipo} tipo |
-  {assinatura} assinatura;
+    parametro_assinatura = 
+    {tipo} tipo |
+    {assinatura} assinatura;
 
 
-exp = 
-{ou} exp ou_logico exp_e |
-{passa_e} exp_e;
+    exp = 
+    {ou} exp ou_logico exp_e |
+    {passa_e} exp_e;
 
-exp_e = 
-{e} exp_e e_logico exp_igual |
-{passa_igual} exp_igual;
+    exp_e = 
+    {e} exp_e e_logico exp_igual |
+    {passa_igual} exp_igual;
 
-exp_igual =
-{equacao} exp_igual igualdade exp_menor |
-{passa_menor} exp_menor;
+    exp_igual =
+    {equacao} exp_igual igualdade exp_menor |
+    {passa_menor} exp_menor;
 
-exp_menor =
-{menor_que} exp_menor menor exp_soma |
-{maior_que} exp_menor maior exp_soma |
-{passa_soma} exp_soma;
+    exp_menor =
+    {menor_que} exp_menor menor exp_soma |
+    {maior_que} exp_menor maior exp_soma |
+    {passa_soma} exp_soma;
 
-exp_soma = 
-{soma} exp_soma mais exp_mult |
-{subtracao} exp_soma menos exp_mult |
-{passa_mult} exp_mult;
+    exp_soma = 
+    {soma} exp_soma mais exp_mult |
+    {subtracao} exp_soma menos exp_mult |
+    {passa_mult} exp_mult;
 
-exp_mult =
-{multiplicacao} exp_mult multiplicacao exp_potencia |
-{divisao} exp_mult barra exp_potencia |
-{divisao_int} exp_mult divisao_int exp_potencia |
-{resto} exp_mult resto exp_potencia |
-{passa_potencia} exp_potencia;
+    exp_mult =
+    {multiplicacao} exp_mult multiplicacao exp_potencia |
+    {divisao} exp_mult barra exp_potencia |
+    {divisao_int} exp_mult divisao_int exp_potencia |
+    {resto} exp_mult resto exp_potencia |
+    {passa_potencia} exp_potencia;
 
-exp_negacao = 
-{negacao} nao_logico exp_negacao |
-{negativo} menos exp_base |
-{passa_base} exp_base;
+    exp_negacao = 
+    {negacao} nao_logico exp_negacao |
+    {negativo} menos exp_base |
+    {passa_base} exp_base;
 
-exp_potencia = 
-{potencia} exp_negacao potencia exp_potencia |
-{passa_negacao} exp_negacao;
+    exp_potencia = 
+    {potencia} exp_negacao potencia exp_potencia |
+    {passa_negacao} exp_negacao;
 
-exp_base =
-{parentesis} menor_precedencia exp maior_precedencia |
-{numeral_int} numeral_int |
-{numeral_real} numeral_real |
-{bool_v} bool_v |
-{bool_f} bool_f |
-{id} id |
-{id_const} id_const |
-{bloco_exp} bloco_exp |
-{chamada} chamada |
-{guarda} guarda;
-
-
-guarda = l_colchete clausula+ senao r_colchete;
-
-clausula = barra_vert_dupla [condicao]:exp igual [retorno]:exp;
-
-senao = barra_vert_dupla sustenido igual exp;
+    exp_base =
+    {parentesis} menor_precedencia exp maior_precedencia |
+    {numeral_int} numeral_int |
+    {numeral_real} numeral_real |
+    {bool_v} bool_v |
+    {bool_f} bool_f |
+    {id} id |
+    {id_const} id_const |
+    {bloco_exp} bloco_exp |
+    {chamada} chamada |
+    {guarda} guarda;
 
 
-bloco_exp = l_colchete dec_cons+ exp r_colchete;
+    guarda = l_colchete clausula+ senao r_colchete;
 
-dec_cons = [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete;
+    clausula = barra_vert_dupla [condicao]:exp igual [retorno]:exp;
 
-chamada = id_funcao l_colchete lista_args r_colchete;
+    senao = barra_vert_dupla sustenido igual exp;
 
-lista_args = 
-{vazio} |
-{argumentos} arg separador_arg*;
 
-separador_arg = barra_vert arg;
+    bloco_exp = l_colchete dec_cons+ exp r_colchete;
 
-arg = 
-{exp} exp |
-{id_funcao} id_funcao;
+    dec_cons = [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete;
 
+    chamada = id_funcao l_colchete lista_args r_colchete;
+
+    lista_args = 
+    {vazio} |
+    {argumentos} arg separador_arg*;
+
+    separador_arg = barra_vert arg;
+
+    arg = 
+    {exp} exp |
+    {id_funcao} id_funcao;
