@@ -7,13 +7,9 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class ADecCons extends PDecCons
 {
-    private TLColchete _abre_;
     private PTipo _tipo_;
     private TIdConst _idConst_;
-    private TLColchete _abreExp_;
     private PExp _exp_;
-    private TRColchete _fechaExp_;
-    private TRColchete _fecha_;
 
     public ADecCons()
     {
@@ -21,28 +17,16 @@ public final class ADecCons extends PDecCons
     }
 
     public ADecCons(
-        @SuppressWarnings("hiding") TLColchete _abre_,
         @SuppressWarnings("hiding") PTipo _tipo_,
         @SuppressWarnings("hiding") TIdConst _idConst_,
-        @SuppressWarnings("hiding") TLColchete _abreExp_,
-        @SuppressWarnings("hiding") PExp _exp_,
-        @SuppressWarnings("hiding") TRColchete _fechaExp_,
-        @SuppressWarnings("hiding") TRColchete _fecha_)
+        @SuppressWarnings("hiding") PExp _exp_)
     {
         // Constructor
-        setAbre(_abre_);
-
         setTipo(_tipo_);
 
         setIdConst(_idConst_);
 
-        setAbreExp(_abreExp_);
-
         setExp(_exp_);
-
-        setFechaExp(_fechaExp_);
-
-        setFecha(_fecha_);
 
     }
 
@@ -50,44 +34,15 @@ public final class ADecCons extends PDecCons
     public Object clone()
     {
         return new ADecCons(
-            cloneNode(this._abre_),
             cloneNode(this._tipo_),
             cloneNode(this._idConst_),
-            cloneNode(this._abreExp_),
-            cloneNode(this._exp_),
-            cloneNode(this._fechaExp_),
-            cloneNode(this._fecha_));
+            cloneNode(this._exp_));
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseADecCons(this);
-    }
-
-    public TLColchete getAbre()
-    {
-        return this._abre_;
-    }
-
-    public void setAbre(TLColchete node)
-    {
-        if(this._abre_ != null)
-        {
-            this._abre_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._abre_ = node;
     }
 
     public PTipo getTipo()
@@ -140,31 +95,6 @@ public final class ADecCons extends PDecCons
         this._idConst_ = node;
     }
 
-    public TLColchete getAbreExp()
-    {
-        return this._abreExp_;
-    }
-
-    public void setAbreExp(TLColchete node)
-    {
-        if(this._abreExp_ != null)
-        {
-            this._abreExp_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._abreExp_ = node;
-    }
-
     public PExp getExp()
     {
         return this._exp_;
@@ -190,79 +120,19 @@ public final class ADecCons extends PDecCons
         this._exp_ = node;
     }
 
-    public TRColchete getFechaExp()
-    {
-        return this._fechaExp_;
-    }
-
-    public void setFechaExp(TRColchete node)
-    {
-        if(this._fechaExp_ != null)
-        {
-            this._fechaExp_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._fechaExp_ = node;
-    }
-
-    public TRColchete getFecha()
-    {
-        return this._fecha_;
-    }
-
-    public void setFecha(TRColchete node)
-    {
-        if(this._fecha_ != null)
-        {
-            this._fecha_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._fecha_ = node;
-    }
-
     @Override
     public String toString()
     {
         return ""
-            + toString(this._abre_)
             + toString(this._tipo_)
             + toString(this._idConst_)
-            + toString(this._abreExp_)
-            + toString(this._exp_)
-            + toString(this._fechaExp_)
-            + toString(this._fecha_);
+            + toString(this._exp_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._abre_ == child)
-        {
-            this._abre_ = null;
-            return;
-        }
-
         if(this._tipo_ == child)
         {
             this._tipo_ = null;
@@ -275,27 +145,9 @@ public final class ADecCons extends PDecCons
             return;
         }
 
-        if(this._abreExp_ == child)
-        {
-            this._abreExp_ = null;
-            return;
-        }
-
         if(this._exp_ == child)
         {
             this._exp_ = null;
-            return;
-        }
-
-        if(this._fechaExp_ == child)
-        {
-            this._fechaExp_ = null;
-            return;
-        }
-
-        if(this._fecha_ == child)
-        {
-            this._fecha_ = null;
             return;
         }
 
@@ -306,12 +158,6 @@ public final class ADecCons extends PDecCons
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._abre_ == oldChild)
-        {
-            setAbre((TLColchete) newChild);
-            return;
-        }
-
         if(this._tipo_ == oldChild)
         {
             setTipo((PTipo) newChild);
@@ -324,27 +170,9 @@ public final class ADecCons extends PDecCons
             return;
         }
 
-        if(this._abreExp_ == oldChild)
-        {
-            setAbreExp((TLColchete) newChild);
-            return;
-        }
-
         if(this._exp_ == oldChild)
         {
             setExp((PExp) newChild);
-            return;
-        }
-
-        if(this._fechaExp_ == oldChild)
-        {
-            setFechaExp((TRColchete) newChild);
-            return;
-        }
-
-        if(this._fecha_ == oldChild)
-        {
-            setFecha((TRColchete) newChild);
             return;
         }
 

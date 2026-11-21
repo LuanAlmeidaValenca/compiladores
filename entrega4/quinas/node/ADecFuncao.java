@@ -2,23 +2,17 @@
 
 package quinas.node;
 
+import java.util.*;
 import quinas.analysis.*;
 
 @SuppressWarnings("nls")
 public final class ADecFuncao extends PDecFuncao
 {
     private TPontoEntrada _pontoEntrada_;
-    private TLColchete _abreFuncao_;
     private PTipo _tipo_;
     private TIdFuncao _idFuncao_;
-    private TLColchete _colcheteParamL_;
-    private PListaParametros _listaParametros_;
-    private TRColchete _colcheteParamR_;
-    private TDoisPontos _doisPontos_;
-    private TLColchete _colcheteExpL_;
+    private final LinkedList<PParametro> _parametro_ = new LinkedList<PParametro>();
     private PExp _exp_;
-    private TRColchete _colcheteExpR_;
-    private TRColchete _fechaFuncao_;
 
     public ADecFuncao()
     {
@@ -27,42 +21,21 @@ public final class ADecFuncao extends PDecFuncao
 
     public ADecFuncao(
         @SuppressWarnings("hiding") TPontoEntrada _pontoEntrada_,
-        @SuppressWarnings("hiding") TLColchete _abreFuncao_,
         @SuppressWarnings("hiding") PTipo _tipo_,
         @SuppressWarnings("hiding") TIdFuncao _idFuncao_,
-        @SuppressWarnings("hiding") TLColchete _colcheteParamL_,
-        @SuppressWarnings("hiding") PListaParametros _listaParametros_,
-        @SuppressWarnings("hiding") TRColchete _colcheteParamR_,
-        @SuppressWarnings("hiding") TDoisPontos _doisPontos_,
-        @SuppressWarnings("hiding") TLColchete _colcheteExpL_,
-        @SuppressWarnings("hiding") PExp _exp_,
-        @SuppressWarnings("hiding") TRColchete _colcheteExpR_,
-        @SuppressWarnings("hiding") TRColchete _fechaFuncao_)
+        @SuppressWarnings("hiding") List<?> _parametro_,
+        @SuppressWarnings("hiding") PExp _exp_)
     {
         // Constructor
         setPontoEntrada(_pontoEntrada_);
-
-        setAbreFuncao(_abreFuncao_);
 
         setTipo(_tipo_);
 
         setIdFuncao(_idFuncao_);
 
-        setColcheteParamL(_colcheteParamL_);
-
-        setListaParametros(_listaParametros_);
-
-        setColcheteParamR(_colcheteParamR_);
-
-        setDoisPontos(_doisPontos_);
-
-        setColcheteExpL(_colcheteExpL_);
+        setParametro(_parametro_);
 
         setExp(_exp_);
-
-        setColcheteExpR(_colcheteExpR_);
-
-        setFechaFuncao(_fechaFuncao_);
 
     }
 
@@ -71,17 +44,10 @@ public final class ADecFuncao extends PDecFuncao
     {
         return new ADecFuncao(
             cloneNode(this._pontoEntrada_),
-            cloneNode(this._abreFuncao_),
             cloneNode(this._tipo_),
             cloneNode(this._idFuncao_),
-            cloneNode(this._colcheteParamL_),
-            cloneNode(this._listaParametros_),
-            cloneNode(this._colcheteParamR_),
-            cloneNode(this._doisPontos_),
-            cloneNode(this._colcheteExpL_),
-            cloneNode(this._exp_),
-            cloneNode(this._colcheteExpR_),
-            cloneNode(this._fechaFuncao_));
+            cloneList(this._parametro_),
+            cloneNode(this._exp_));
     }
 
     @Override
@@ -113,31 +79,6 @@ public final class ADecFuncao extends PDecFuncao
         }
 
         this._pontoEntrada_ = node;
-    }
-
-    public TLColchete getAbreFuncao()
-    {
-        return this._abreFuncao_;
-    }
-
-    public void setAbreFuncao(TLColchete node)
-    {
-        if(this._abreFuncao_ != null)
-        {
-            this._abreFuncao_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._abreFuncao_ = node;
     }
 
     public PTipo getTipo()
@@ -190,129 +131,30 @@ public final class ADecFuncao extends PDecFuncao
         this._idFuncao_ = node;
     }
 
-    public TLColchete getColcheteParamL()
+    public LinkedList<PParametro> getParametro()
     {
-        return this._colcheteParamL_;
+        return this._parametro_;
     }
 
-    public void setColcheteParamL(TLColchete node)
+    public void setParametro(List<?> list)
     {
-        if(this._colcheteParamL_ != null)
+        for(PParametro e : this._parametro_)
         {
-            this._colcheteParamL_.parent(null);
+            e.parent(null);
         }
+        this._parametro_.clear();
 
-        if(node != null)
+        for(Object obj_e : list)
         {
-            if(node.parent() != null)
+            PParametro e = (PParametro) obj_e;
+            if(e.parent() != null)
             {
-                node.parent().removeChild(node);
+                e.parent().removeChild(e);
             }
 
-            node.parent(this);
+            e.parent(this);
+            this._parametro_.add(e);
         }
-
-        this._colcheteParamL_ = node;
-    }
-
-    public PListaParametros getListaParametros()
-    {
-        return this._listaParametros_;
-    }
-
-    public void setListaParametros(PListaParametros node)
-    {
-        if(this._listaParametros_ != null)
-        {
-            this._listaParametros_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._listaParametros_ = node;
-    }
-
-    public TRColchete getColcheteParamR()
-    {
-        return this._colcheteParamR_;
-    }
-
-    public void setColcheteParamR(TRColchete node)
-    {
-        if(this._colcheteParamR_ != null)
-        {
-            this._colcheteParamR_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._colcheteParamR_ = node;
-    }
-
-    public TDoisPontos getDoisPontos()
-    {
-        return this._doisPontos_;
-    }
-
-    public void setDoisPontos(TDoisPontos node)
-    {
-        if(this._doisPontos_ != null)
-        {
-            this._doisPontos_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._doisPontos_ = node;
-    }
-
-    public TLColchete getColcheteExpL()
-    {
-        return this._colcheteExpL_;
-    }
-
-    public void setColcheteExpL(TLColchete node)
-    {
-        if(this._colcheteExpL_ != null)
-        {
-            this._colcheteExpL_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._colcheteExpL_ = node;
     }
 
     public PExp getExp()
@@ -340,72 +182,15 @@ public final class ADecFuncao extends PDecFuncao
         this._exp_ = node;
     }
 
-    public TRColchete getColcheteExpR()
-    {
-        return this._colcheteExpR_;
-    }
-
-    public void setColcheteExpR(TRColchete node)
-    {
-        if(this._colcheteExpR_ != null)
-        {
-            this._colcheteExpR_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._colcheteExpR_ = node;
-    }
-
-    public TRColchete getFechaFuncao()
-    {
-        return this._fechaFuncao_;
-    }
-
-    public void setFechaFuncao(TRColchete node)
-    {
-        if(this._fechaFuncao_ != null)
-        {
-            this._fechaFuncao_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._fechaFuncao_ = node;
-    }
-
     @Override
     public String toString()
     {
         return ""
             + toString(this._pontoEntrada_)
-            + toString(this._abreFuncao_)
             + toString(this._tipo_)
             + toString(this._idFuncao_)
-            + toString(this._colcheteParamL_)
-            + toString(this._listaParametros_)
-            + toString(this._colcheteParamR_)
-            + toString(this._doisPontos_)
-            + toString(this._colcheteExpL_)
-            + toString(this._exp_)
-            + toString(this._colcheteExpR_)
-            + toString(this._fechaFuncao_);
+            + toString(this._parametro_)
+            + toString(this._exp_);
     }
 
     @Override
@@ -415,12 +200,6 @@ public final class ADecFuncao extends PDecFuncao
         if(this._pontoEntrada_ == child)
         {
             this._pontoEntrada_ = null;
-            return;
-        }
-
-        if(this._abreFuncao_ == child)
-        {
-            this._abreFuncao_ = null;
             return;
         }
 
@@ -436,51 +215,14 @@ public final class ADecFuncao extends PDecFuncao
             return;
         }
 
-        if(this._colcheteParamL_ == child)
+        if(this._parametro_.remove(child))
         {
-            this._colcheteParamL_ = null;
-            return;
-        }
-
-        if(this._listaParametros_ == child)
-        {
-            this._listaParametros_ = null;
-            return;
-        }
-
-        if(this._colcheteParamR_ == child)
-        {
-            this._colcheteParamR_ = null;
-            return;
-        }
-
-        if(this._doisPontos_ == child)
-        {
-            this._doisPontos_ = null;
-            return;
-        }
-
-        if(this._colcheteExpL_ == child)
-        {
-            this._colcheteExpL_ = null;
             return;
         }
 
         if(this._exp_ == child)
         {
             this._exp_ = null;
-            return;
-        }
-
-        if(this._colcheteExpR_ == child)
-        {
-            this._colcheteExpR_ = null;
-            return;
-        }
-
-        if(this._fechaFuncao_ == child)
-        {
-            this._fechaFuncao_ = null;
             return;
         }
 
@@ -497,12 +239,6 @@ public final class ADecFuncao extends PDecFuncao
             return;
         }
 
-        if(this._abreFuncao_ == oldChild)
-        {
-            setAbreFuncao((TLColchete) newChild);
-            return;
-        }
-
         if(this._tipo_ == oldChild)
         {
             setTipo((PTipo) newChild);
@@ -515,51 +251,27 @@ public final class ADecFuncao extends PDecFuncao
             return;
         }
 
-        if(this._colcheteParamL_ == oldChild)
+        for(ListIterator<PParametro> i = this._parametro_.listIterator(); i.hasNext();)
         {
-            setColcheteParamL((TLColchete) newChild);
-            return;
-        }
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PParametro) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
 
-        if(this._listaParametros_ == oldChild)
-        {
-            setListaParametros((PListaParametros) newChild);
-            return;
-        }
-
-        if(this._colcheteParamR_ == oldChild)
-        {
-            setColcheteParamR((TRColchete) newChild);
-            return;
-        }
-
-        if(this._doisPontos_ == oldChild)
-        {
-            setDoisPontos((TDoisPontos) newChild);
-            return;
-        }
-
-        if(this._colcheteExpL_ == oldChild)
-        {
-            setColcheteExpL((TLColchete) newChild);
-            return;
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
         if(this._exp_ == oldChild)
         {
             setExp((PExp) newChild);
-            return;
-        }
-
-        if(this._colcheteExpR_ == oldChild)
-        {
-            setColcheteExpR((TRColchete) newChild);
-            return;
-        }
-
-        if(this._fechaFuncao_ == oldChild)
-        {
-            setFechaFuncao((TRColchete) newChild);
             return;
         }
 

@@ -7,9 +7,7 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class AClausula extends PClausula
 {
-    private TBarraVertDupla _barraVertDupla_;
     private PExp _condicao_;
-    private TIgual _igual_;
     private PExp _retorno_;
 
     public AClausula()
@@ -18,17 +16,11 @@ public final class AClausula extends PClausula
     }
 
     public AClausula(
-        @SuppressWarnings("hiding") TBarraVertDupla _barraVertDupla_,
         @SuppressWarnings("hiding") PExp _condicao_,
-        @SuppressWarnings("hiding") TIgual _igual_,
         @SuppressWarnings("hiding") PExp _retorno_)
     {
         // Constructor
-        setBarraVertDupla(_barraVertDupla_);
-
         setCondicao(_condicao_);
-
-        setIgual(_igual_);
 
         setRetorno(_retorno_);
 
@@ -38,9 +30,7 @@ public final class AClausula extends PClausula
     public Object clone()
     {
         return new AClausula(
-            cloneNode(this._barraVertDupla_),
             cloneNode(this._condicao_),
-            cloneNode(this._igual_),
             cloneNode(this._retorno_));
     }
 
@@ -48,31 +38,6 @@ public final class AClausula extends PClausula
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAClausula(this);
-    }
-
-    public TBarraVertDupla getBarraVertDupla()
-    {
-        return this._barraVertDupla_;
-    }
-
-    public void setBarraVertDupla(TBarraVertDupla node)
-    {
-        if(this._barraVertDupla_ != null)
-        {
-            this._barraVertDupla_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._barraVertDupla_ = node;
     }
 
     public PExp getCondicao()
@@ -98,31 +63,6 @@ public final class AClausula extends PClausula
         }
 
         this._condicao_ = node;
-    }
-
-    public TIgual getIgual()
-    {
-        return this._igual_;
-    }
-
-    public void setIgual(TIgual node)
-    {
-        if(this._igual_ != null)
-        {
-            this._igual_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._igual_ = node;
     }
 
     public PExp getRetorno()
@@ -154,9 +94,7 @@ public final class AClausula extends PClausula
     public String toString()
     {
         return ""
-            + toString(this._barraVertDupla_)
             + toString(this._condicao_)
-            + toString(this._igual_)
             + toString(this._retorno_);
     }
 
@@ -164,21 +102,9 @@ public final class AClausula extends PClausula
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._barraVertDupla_ == child)
-        {
-            this._barraVertDupla_ = null;
-            return;
-        }
-
         if(this._condicao_ == child)
         {
             this._condicao_ = null;
-            return;
-        }
-
-        if(this._igual_ == child)
-        {
-            this._igual_ = null;
             return;
         }
 
@@ -195,21 +121,9 @@ public final class AClausula extends PClausula
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._barraVertDupla_ == oldChild)
-        {
-            setBarraVertDupla((TBarraVertDupla) newChild);
-            return;
-        }
-
         if(this._condicao_ == oldChild)
         {
             setCondicao((PExp) newChild);
-            return;
-        }
-
-        if(this._igual_ == oldChild)
-        {
-            setIgual((TIgual) newChild);
             return;
         }
 

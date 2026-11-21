@@ -7,26 +7,16 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class ABooleanoTipo extends PTipo
 {
-    private TTipoBooleano _tipoBooleano_;
 
     public ABooleanoTipo()
     {
         // Constructor
     }
 
-    public ABooleanoTipo(
-        @SuppressWarnings("hiding") TTipoBooleano _tipoBooleano_)
-    {
-        // Constructor
-        setTipoBooleano(_tipoBooleano_);
-
-    }
-
     @Override
     public Object clone()
     {
-        return new ABooleanoTipo(
-            cloneNode(this._tipoBooleano_));
+        return new ABooleanoTipo();
     }
 
     @Override
@@ -35,48 +25,16 @@ public final class ABooleanoTipo extends PTipo
         ((Analysis) sw).caseABooleanoTipo(this);
     }
 
-    public TTipoBooleano getTipoBooleano()
-    {
-        return this._tipoBooleano_;
-    }
-
-    public void setTipoBooleano(TTipoBooleano node)
-    {
-        if(this._tipoBooleano_ != null)
-        {
-            this._tipoBooleano_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._tipoBooleano_ = node;
-    }
-
     @Override
     public String toString()
     {
-        return ""
-            + toString(this._tipoBooleano_);
+        return "";
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._tipoBooleano_ == child)
-        {
-            this._tipoBooleano_ = null;
-            return;
-        }
-
         throw new RuntimeException("Not a child.");
     }
 
@@ -84,12 +42,6 @@ public final class ABooleanoTipo extends PTipo
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._tipoBooleano_ == oldChild)
-        {
-            setTipoBooleano((TTipoBooleano) newChild);
-            return;
-        }
-
         throw new RuntimeException("Not a child.");
     }
 }

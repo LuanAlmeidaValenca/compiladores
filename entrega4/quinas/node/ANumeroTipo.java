@@ -7,26 +7,16 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class ANumeroTipo extends PTipo
 {
-    private TTipoNumero _tipoNumero_;
 
     public ANumeroTipo()
     {
         // Constructor
     }
 
-    public ANumeroTipo(
-        @SuppressWarnings("hiding") TTipoNumero _tipoNumero_)
-    {
-        // Constructor
-        setTipoNumero(_tipoNumero_);
-
-    }
-
     @Override
     public Object clone()
     {
-        return new ANumeroTipo(
-            cloneNode(this._tipoNumero_));
+        return new ANumeroTipo();
     }
 
     @Override
@@ -35,48 +25,16 @@ public final class ANumeroTipo extends PTipo
         ((Analysis) sw).caseANumeroTipo(this);
     }
 
-    public TTipoNumero getTipoNumero()
-    {
-        return this._tipoNumero_;
-    }
-
-    public void setTipoNumero(TTipoNumero node)
-    {
-        if(this._tipoNumero_ != null)
-        {
-            this._tipoNumero_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._tipoNumero_ = node;
-    }
-
     @Override
     public String toString()
     {
-        return ""
-            + toString(this._tipoNumero_);
+        return "";
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._tipoNumero_ == child)
-        {
-            this._tipoNumero_ = null;
-            return;
-        }
-
         throw new RuntimeException("Not a child.");
     }
 
@@ -84,12 +42,6 @@ public final class ANumeroTipo extends PTipo
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._tipoNumero_ == oldChild)
-        {
-            setTipoNumero((TTipoNumero) newChild);
-            return;
-        }
-
         throw new RuntimeException("Not a child.");
     }
 }

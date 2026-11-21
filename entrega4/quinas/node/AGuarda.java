@@ -8,10 +8,8 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class AGuarda extends PGuarda
 {
-    private TLColchete _lColchete_;
     private final LinkedList<PClausula> _clausula_ = new LinkedList<PClausula>();
-    private PSenao _senao_;
-    private TRColchete _rColchete_;
+    private PExp _senao_;
 
     public AGuarda()
     {
@@ -19,19 +17,13 @@ public final class AGuarda extends PGuarda
     }
 
     public AGuarda(
-        @SuppressWarnings("hiding") TLColchete _lColchete_,
         @SuppressWarnings("hiding") List<?> _clausula_,
-        @SuppressWarnings("hiding") PSenao _senao_,
-        @SuppressWarnings("hiding") TRColchete _rColchete_)
+        @SuppressWarnings("hiding") PExp _senao_)
     {
         // Constructor
-        setLColchete(_lColchete_);
-
         setClausula(_clausula_);
 
         setSenao(_senao_);
-
-        setRColchete(_rColchete_);
 
     }
 
@@ -39,41 +31,14 @@ public final class AGuarda extends PGuarda
     public Object clone()
     {
         return new AGuarda(
-            cloneNode(this._lColchete_),
             cloneList(this._clausula_),
-            cloneNode(this._senao_),
-            cloneNode(this._rColchete_));
+            cloneNode(this._senao_));
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAGuarda(this);
-    }
-
-    public TLColchete getLColchete()
-    {
-        return this._lColchete_;
-    }
-
-    public void setLColchete(TLColchete node)
-    {
-        if(this._lColchete_ != null)
-        {
-            this._lColchete_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._lColchete_ = node;
     }
 
     public LinkedList<PClausula> getClausula()
@@ -102,12 +67,12 @@ public final class AGuarda extends PGuarda
         }
     }
 
-    public PSenao getSenao()
+    public PExp getSenao()
     {
         return this._senao_;
     }
 
-    public void setSenao(PSenao node)
+    public void setSenao(PExp node)
     {
         if(this._senao_ != null)
         {
@@ -127,51 +92,18 @@ public final class AGuarda extends PGuarda
         this._senao_ = node;
     }
 
-    public TRColchete getRColchete()
-    {
-        return this._rColchete_;
-    }
-
-    public void setRColchete(TRColchete node)
-    {
-        if(this._rColchete_ != null)
-        {
-            this._rColchete_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._rColchete_ = node;
-    }
-
     @Override
     public String toString()
     {
         return ""
-            + toString(this._lColchete_)
             + toString(this._clausula_)
-            + toString(this._senao_)
-            + toString(this._rColchete_);
+            + toString(this._senao_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._lColchete_ == child)
-        {
-            this._lColchete_ = null;
-            return;
-        }
-
         if(this._clausula_.remove(child))
         {
             return;
@@ -183,12 +115,6 @@ public final class AGuarda extends PGuarda
             return;
         }
 
-        if(this._rColchete_ == child)
-        {
-            this._rColchete_ = null;
-            return;
-        }
-
         throw new RuntimeException("Not a child.");
     }
 
@@ -196,12 +122,6 @@ public final class AGuarda extends PGuarda
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._lColchete_ == oldChild)
-        {
-            setLColchete((TLColchete) newChild);
-            return;
-        }
-
         for(ListIterator<PClausula> i = this._clausula_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
@@ -222,13 +142,7 @@ public final class AGuarda extends PGuarda
 
         if(this._senao_ == oldChild)
         {
-            setSenao((PSenao) newChild);
-            return;
-        }
-
-        if(this._rColchete_ == oldChild)
-        {
-            setRColchete((TRColchete) newChild);
+            setSenao((PExp) newChild);
             return;
         }
 

@@ -8,10 +8,8 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class ABlocoExp extends PBlocoExp
 {
-    private TLColchete _lColchete_;
     private final LinkedList<PDecCons> _decCons_ = new LinkedList<PDecCons>();
     private PExp _exp_;
-    private TRColchete _rColchete_;
 
     public ABlocoExp()
     {
@@ -19,19 +17,13 @@ public final class ABlocoExp extends PBlocoExp
     }
 
     public ABlocoExp(
-        @SuppressWarnings("hiding") TLColchete _lColchete_,
         @SuppressWarnings("hiding") List<?> _decCons_,
-        @SuppressWarnings("hiding") PExp _exp_,
-        @SuppressWarnings("hiding") TRColchete _rColchete_)
+        @SuppressWarnings("hiding") PExp _exp_)
     {
         // Constructor
-        setLColchete(_lColchete_);
-
         setDecCons(_decCons_);
 
         setExp(_exp_);
-
-        setRColchete(_rColchete_);
 
     }
 
@@ -39,41 +31,14 @@ public final class ABlocoExp extends PBlocoExp
     public Object clone()
     {
         return new ABlocoExp(
-            cloneNode(this._lColchete_),
             cloneList(this._decCons_),
-            cloneNode(this._exp_),
-            cloneNode(this._rColchete_));
+            cloneNode(this._exp_));
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseABlocoExp(this);
-    }
-
-    public TLColchete getLColchete()
-    {
-        return this._lColchete_;
-    }
-
-    public void setLColchete(TLColchete node)
-    {
-        if(this._lColchete_ != null)
-        {
-            this._lColchete_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._lColchete_ = node;
     }
 
     public LinkedList<PDecCons> getDecCons()
@@ -127,51 +92,18 @@ public final class ABlocoExp extends PBlocoExp
         this._exp_ = node;
     }
 
-    public TRColchete getRColchete()
-    {
-        return this._rColchete_;
-    }
-
-    public void setRColchete(TRColchete node)
-    {
-        if(this._rColchete_ != null)
-        {
-            this._rColchete_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._rColchete_ = node;
-    }
-
     @Override
     public String toString()
     {
         return ""
-            + toString(this._lColchete_)
             + toString(this._decCons_)
-            + toString(this._exp_)
-            + toString(this._rColchete_);
+            + toString(this._exp_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._lColchete_ == child)
-        {
-            this._lColchete_ = null;
-            return;
-        }
-
         if(this._decCons_.remove(child))
         {
             return;
@@ -183,12 +115,6 @@ public final class ABlocoExp extends PBlocoExp
             return;
         }
 
-        if(this._rColchete_ == child)
-        {
-            this._rColchete_ = null;
-            return;
-        }
-
         throw new RuntimeException("Not a child.");
     }
 
@@ -196,12 +122,6 @@ public final class ABlocoExp extends PBlocoExp
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._lColchete_ == oldChild)
-        {
-            setLColchete((TLColchete) newChild);
-            return;
-        }
-
         for(ListIterator<PDecCons> i = this._decCons_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
@@ -223,12 +143,6 @@ public final class ABlocoExp extends PBlocoExp
         if(this._exp_ == oldChild)
         {
             setExp((PExp) newChild);
-            return;
-        }
-
-        if(this._rColchete_ == oldChild)
-        {
-            setRColchete((TRColchete) newChild);
             return;
         }
 

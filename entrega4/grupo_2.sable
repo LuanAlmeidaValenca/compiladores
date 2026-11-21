@@ -78,6 +78,126 @@ Ignored Tokens
     comentario_linha,
     comentario_bloco;
 
+Productions
+    programa {-> programa} =
+    dec_funcao+ {-> New programa([dec_funcao])};
+
+    dec_funcao {-> dec_funcao} =
+    ponto_entrada? [abre_funcao]:l_colchete tipo id_funcao 
+    [colchete_param_l]:l_colchete lista_parametros [colchete_param_r]:r_colchete dois_pontos 
+    [colchete_exp_l]:l_colchete exp [colchete_exp_r]:r_colchete [fecha_funcao]:r_colchete
+    {-> New dec_funcao(ponto_entrada, tipo, id_funcao, [lista_parametros.parametro], exp)};
+
+    tipo {-> tipo} =
+    {numero} tipo_numero {-> New tipo.numero()}|
+    {booleano} tipo_booleano {-> New tipo.booleano()};
+
+    lista_parametros {-> parametro*} =
+    {vazio} {-> []} |
+    {parametros} parametro separador_parametro* {-> [parametro, separador_parametro.parametro]};
+
+    separador_parametro {-> parametro} =
+    barra_vert parametro {-> parametro};
+
+    parametro {-> parametro} =
+    {tipo_id} tipo id {-> New parametro.tipo_id(tipo, id)} |
+    {assinatura} assinatura {-> New parametro.assinatura(assinatura)};
+
+    assinatura {-> assinatura} = 
+    tipo id_funcao l_colchete parametros_assinatura r_colchete {->New assinatura(tipo, id_funcao, [parametros_assinatura.parametro_assinatura])};
+
+    parametros_assinatura {-> parametro_assinatura*} = 
+    {vazio} {-> []} |
+    {params_assinaturas} parametro_assinatura separador_assinatura* {-> [parametro_assinatura, separador_assinatura.parametro_assinatura]};
+
+    separador_assinatura {-> parametro_assinatura} = 
+    barra_vert parametro_assinatura {-> parametro_assinatura};
+
+    parametro_assinatura {-> parametro_assinatura} = 
+    {tipo} tipo {-> New parametro_assinatura.tipo(tipo)} |
+    {assinatura} assinatura {-> New parametro_assinatura.assinatura(assinatura)};
+
+
+    exp {-> exp} = 
+    {ou} exp ou_logico exp_e {-> New exp.ou(exp, exp_e.exp)} |
+    {passa_e} exp_e {-> exp_e.exp};
+
+    exp_e {-> exp} = 
+    {e} exp_e e_logico exp_igual {-> New exp.e(exp_e.exp, exp_igual.exp)} |
+    {passa_igual} exp_igual {-> exp_igual.exp};
+
+    exp_igual {-> exp} =
+    {equacao} exp_igual igualdade exp_menor {-> New exp.igualdade(exp_igual.exp, exp_menor.exp)} |
+    {passa_menor} exp_menor {-> exp_menor.exp};
+
+    exp_menor {-> exp} =
+    {menor_que} exp_menor menor exp_soma {-> New exp.menor(exp_menor.exp, exp_soma.exp)} |
+    {maior_que} exp_menor maior exp_soma {-> New exp.maior(exp_menor.exp, exp_soma.exp)} |
+    {passa_soma} exp_soma {-> exp_soma.exp};
+
+    exp_soma {-> exp} = 
+    {soma} exp_soma mais exp_mult {-> New exp.soma(exp_soma.exp, exp_mult.exp)} |
+    {subtracao} exp_soma menos exp_mult {-> New exp.subtracao(exp_soma.exp, exp_mult.exp)}|
+    {passa_mult} exp_mult {-> exp_mult.exp};
+
+    exp_mult {-> exp} =
+    {multiplicacao} exp_mult multiplicacao exp_potencia {-> New exp.multiplicacao(exp_mult.exp, exp_potencia.exp)} |
+    {divisao} exp_mult barra exp_potencia {-> New exp.divisao(exp_mult.exp, exp_potencia.exp)} |
+    {divisao_int} exp_mult divisao_int exp_potencia {-> New exp.divisao_int(exp_mult.exp, exp_potencia.exp)} |
+    {resto} exp_mult resto exp_potencia {-> New exp.resto(exp_mult.exp, exp_potencia.exp)}|
+    {passa_potencia} exp_potencia {-> exp_potencia.exp};
+
+    exp_potencia {-> exp} = 
+    {potencia} exp_negacao potencia exp_potencia {-> New exp.potencia(exp_negacao.exp, exp_potencia.exp)} |
+    {passa_negacao} exp_negacao {-> exp_negacao.exp};
+
+    exp_negacao {-> exp} = 
+    {negacao} nao_logico exp_negacao {-> New exp.negacao(exp_negacao.exp)} |
+    {negativo} menos exp_base {-> New exp.negativo(exp_base.exp)} |
+    {passa_base} exp_base {-> exp_base.exp};
+
+    exp_base {-> exp} =
+    {parentesis} menor_precedencia exp maior_precedencia {-> New exp.parentesis(exp)} |
+    {numeral_int} numeral_int {-> New exp.numeral_int(numeral_int)} | 
+    {numeral_real} numeral_real {-> New exp.numeral_real(numeral_real)} |
+    {bool_v} bool_v {-> New exp.bool_v()} |
+    {bool_f} bool_f {-> New exp.bool_f()} |
+    {id} id {-> New exp.id(id)} |
+    {id_const} id_const {-> New exp.id_const(id_const)} |
+    {bloco_exp} bloco_exp {-> New exp.bloco_exp(bloco_exp)} |
+    {chamada} chamada {-> New exp.chamada(chamada)} |
+    {guarda} guarda {-> New exp.guarda(guarda)};
+
+
+    guarda {-> guarda} = 
+    l_colchete clausula+ senao r_colchete {-> New guarda([clausula], senao.exp)};
+
+    clausula {-> clausula} = 
+    barra_vert_dupla [condicao]:exp igual [retorno]:exp {-> New clausula(condicao.exp, retorno.exp)};
+
+    senao {-> exp} = 
+    barra_vert_dupla sustenido igual exp {-> exp};
+
+    bloco_exp {-> bloco_exp} = 
+    l_colchete dec_cons+ exp r_colchete {-> New bloco_exp([dec_cons], exp)};
+
+    dec_cons {-> dec_cons} = 
+    [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete {-> New dec_cons(tipo, id_const, exp)};
+
+    chamada {-> chamada} = 
+    id_funcao l_colchete lista_args r_colchete {-> New chamada(id_funcao, [lista_args.arg])};
+
+    lista_args {-> arg*} = 
+    {vazio} {-> []} |
+    {argumentos} arg separador_arg* {-> [arg, separador_arg.arg]};
+
+    separador_arg {-> arg} = 
+    barra_vert arg {-> arg};
+
+    arg {-> arg} = 
+    {exp} exp {-> New arg.exp(exp)} |
+    {id_funcao} id_funcao {-> New arg.id_funcao(id_funcao)};
+
 Abstract Syntax Tree
     programa = dec_funcao*;
 
@@ -123,7 +243,7 @@ Abstract Syntax Tree
         {chamada} chamada |
         {guarda} guarda;
 
-    guarda = clausula+ [senao]:exp;
+    guarda = clausula* [senao]:exp;
 
     clausula = [condicao]:exp [retorno]:exp;
 
@@ -136,111 +256,3 @@ Abstract Syntax Tree
     arg = 
         {exp} exp |
         {id_funcao} id_funcao;
-
-Productions
-    programa = dec_funcao+;
-
-    dec_funcao = ponto_entrada? [abre_funcao]:l_colchete tipo id_funcao 
-    [colchete_param_l]:l_colchete lista_parametros [colchete_param_r]:r_colchete dois_pontos 
-    [colchete_exp_l]:l_colchete exp [colchete_exp_r]:r_colchete [fecha_funcao]:r_colchete;
-
-    tipo = 
-    {numero} tipo_numero |
-    {booleano} tipo_booleano;
-
-    lista_parametros =
-    {vazio} |
-    {parametros} parametro separador_parametro*;
-
-    separador_parametro = barra_vert parametro;
-
-    parametro =
-    {tipo_id} tipo id |
-    {assinatura} assinatura;
-
-    assinatura = tipo id_funcao l_colchete parametros_assinatura r_colchete;
-
-    parametros_assinatura = 
-    {vazio} |
-    {params_assinaturas} parametro_assinatura separador_assinatura*;
-
-    separador_assinatura = barra_vert parametro_assinatura;
-
-    parametro_assinatura = 
-    {tipo} tipo |
-    {assinatura} assinatura;
-
-
-    exp = 
-    {ou} exp ou_logico exp_e |
-    {passa_e} exp_e;
-
-    exp_e = 
-    {e} exp_e e_logico exp_igual |
-    {passa_igual} exp_igual;
-
-    exp_igual =
-    {equacao} exp_igual igualdade exp_menor |
-    {passa_menor} exp_menor;
-
-    exp_menor =
-    {menor_que} exp_menor menor exp_soma |
-    {maior_que} exp_menor maior exp_soma |
-    {passa_soma} exp_soma;
-
-    exp_soma = 
-    {soma} exp_soma mais exp_mult |
-    {subtracao} exp_soma menos exp_mult |
-    {passa_mult} exp_mult;
-
-    exp_mult =
-    {multiplicacao} exp_mult multiplicacao exp_potencia |
-    {divisao} exp_mult barra exp_potencia |
-    {divisao_int} exp_mult divisao_int exp_potencia |
-    {resto} exp_mult resto exp_potencia |
-    {passa_potencia} exp_potencia;
-
-    exp_negacao = 
-    {negacao} nao_logico exp_negacao |
-    {negativo} menos exp_base |
-    {passa_base} exp_base;
-
-    exp_potencia = 
-    {potencia} exp_negacao potencia exp_potencia |
-    {passa_negacao} exp_negacao;
-
-    exp_base =
-    {parentesis} menor_precedencia exp maior_precedencia |
-    {numeral_int} numeral_int |
-    {numeral_real} numeral_real |
-    {bool_v} bool_v |
-    {bool_f} bool_f |
-    {id} id |
-    {id_const} id_const |
-    {bloco_exp} bloco_exp |
-    {chamada} chamada |
-    {guarda} guarda;
-
-
-    guarda = l_colchete clausula+ senao r_colchete;
-
-    clausula = barra_vert_dupla [condicao]:exp igual [retorno]:exp;
-
-    senao = barra_vert_dupla sustenido igual exp;
-
-
-    bloco_exp = l_colchete dec_cons+ exp r_colchete;
-
-    dec_cons = [abre]:l_colchete tipo id_const [abre_exp]:l_colchete exp [fecha_exp]:r_colchete [fecha]:r_colchete;
-
-    chamada = id_funcao l_colchete lista_args r_colchete;
-
-    lista_args = 
-    {vazio} |
-    {argumentos} arg separador_arg*;
-
-    separador_arg = barra_vert arg;
-
-    arg = 
-    {exp} exp |
-    {id_funcao} id_funcao;

@@ -7,9 +7,8 @@ import quinas.analysis.*;
 @SuppressWarnings("nls")
 public final class AOuExp extends PExp
 {
-    private PExp _exp_;
-    private TOuLogico _ouLogico_;
-    private PExpE _expE_;
+    private PExp _esq_;
+    private PExp _dir_;
 
     public AOuExp()
     {
@@ -17,16 +16,13 @@ public final class AOuExp extends PExp
     }
 
     public AOuExp(
-        @SuppressWarnings("hiding") PExp _exp_,
-        @SuppressWarnings("hiding") TOuLogico _ouLogico_,
-        @SuppressWarnings("hiding") PExpE _expE_)
+        @SuppressWarnings("hiding") PExp _esq_,
+        @SuppressWarnings("hiding") PExp _dir_)
     {
         // Constructor
-        setExp(_exp_);
+        setEsq(_esq_);
 
-        setOuLogico(_ouLogico_);
-
-        setExpE(_expE_);
+        setDir(_dir_);
 
     }
 
@@ -34,9 +30,8 @@ public final class AOuExp extends PExp
     public Object clone()
     {
         return new AOuExp(
-            cloneNode(this._exp_),
-            cloneNode(this._ouLogico_),
-            cloneNode(this._expE_));
+            cloneNode(this._esq_),
+            cloneNode(this._dir_));
     }
 
     @Override
@@ -45,16 +40,16 @@ public final class AOuExp extends PExp
         ((Analysis) sw).caseAOuExp(this);
     }
 
-    public PExp getExp()
+    public PExp getEsq()
     {
-        return this._exp_;
+        return this._esq_;
     }
 
-    public void setExp(PExp node)
+    public void setEsq(PExp node)
     {
-        if(this._exp_ != null)
+        if(this._esq_ != null)
         {
-            this._exp_.parent(null);
+            this._esq_.parent(null);
         }
 
         if(node != null)
@@ -67,19 +62,19 @@ public final class AOuExp extends PExp
             node.parent(this);
         }
 
-        this._exp_ = node;
+        this._esq_ = node;
     }
 
-    public TOuLogico getOuLogico()
+    public PExp getDir()
     {
-        return this._ouLogico_;
+        return this._dir_;
     }
 
-    public void setOuLogico(TOuLogico node)
+    public void setDir(PExp node)
     {
-        if(this._ouLogico_ != null)
+        if(this._dir_ != null)
         {
-            this._ouLogico_.parent(null);
+            this._dir_.parent(null);
         }
 
         if(node != null)
@@ -92,62 +87,30 @@ public final class AOuExp extends PExp
             node.parent(this);
         }
 
-        this._ouLogico_ = node;
-    }
-
-    public PExpE getExpE()
-    {
-        return this._expE_;
-    }
-
-    public void setExpE(PExpE node)
-    {
-        if(this._expE_ != null)
-        {
-            this._expE_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._expE_ = node;
+        this._dir_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._exp_)
-            + toString(this._ouLogico_)
-            + toString(this._expE_);
+            + toString(this._esq_)
+            + toString(this._dir_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._exp_ == child)
+        if(this._esq_ == child)
         {
-            this._exp_ = null;
+            this._esq_ = null;
             return;
         }
 
-        if(this._ouLogico_ == child)
+        if(this._dir_ == child)
         {
-            this._ouLogico_ = null;
-            return;
-        }
-
-        if(this._expE_ == child)
-        {
-            this._expE_ = null;
+            this._dir_ = null;
             return;
         }
 
@@ -158,21 +121,15 @@ public final class AOuExp extends PExp
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._exp_ == oldChild)
+        if(this._esq_ == oldChild)
         {
-            setExp((PExp) newChild);
+            setEsq((PExp) newChild);
             return;
         }
 
-        if(this._ouLogico_ == oldChild)
+        if(this._dir_ == oldChild)
         {
-            setOuLogico((TOuLogico) newChild);
-            return;
-        }
-
-        if(this._expE_ == oldChild)
-        {
-            setExpE((PExpE) newChild);
+            setDir((PExp) newChild);
             return;
         }
 

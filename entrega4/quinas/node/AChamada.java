@@ -2,15 +2,14 @@
 
 package quinas.node;
 
+import java.util.*;
 import quinas.analysis.*;
 
 @SuppressWarnings("nls")
 public final class AChamada extends PChamada
 {
     private TIdFuncao _idFuncao_;
-    private TLColchete _lColchete_;
-    private PListaArgs _listaArgs_;
-    private TRColchete _rColchete_;
+    private final LinkedList<PArg> _arg_ = new LinkedList<PArg>();
 
     public AChamada()
     {
@@ -19,18 +18,12 @@ public final class AChamada extends PChamada
 
     public AChamada(
         @SuppressWarnings("hiding") TIdFuncao _idFuncao_,
-        @SuppressWarnings("hiding") TLColchete _lColchete_,
-        @SuppressWarnings("hiding") PListaArgs _listaArgs_,
-        @SuppressWarnings("hiding") TRColchete _rColchete_)
+        @SuppressWarnings("hiding") List<?> _arg_)
     {
         // Constructor
         setIdFuncao(_idFuncao_);
 
-        setLColchete(_lColchete_);
-
-        setListaArgs(_listaArgs_);
-
-        setRColchete(_rColchete_);
+        setArg(_arg_);
 
     }
 
@@ -39,9 +32,7 @@ public final class AChamada extends PChamada
     {
         return new AChamada(
             cloneNode(this._idFuncao_),
-            cloneNode(this._lColchete_),
-            cloneNode(this._listaArgs_),
-            cloneNode(this._rColchete_));
+            cloneList(this._arg_));
     }
 
     @Override
@@ -75,79 +66,30 @@ public final class AChamada extends PChamada
         this._idFuncao_ = node;
     }
 
-    public TLColchete getLColchete()
+    public LinkedList<PArg> getArg()
     {
-        return this._lColchete_;
+        return this._arg_;
     }
 
-    public void setLColchete(TLColchete node)
+    public void setArg(List<?> list)
     {
-        if(this._lColchete_ != null)
+        for(PArg e : this._arg_)
         {
-            this._lColchete_.parent(null);
+            e.parent(null);
         }
+        this._arg_.clear();
 
-        if(node != null)
+        for(Object obj_e : list)
         {
-            if(node.parent() != null)
+            PArg e = (PArg) obj_e;
+            if(e.parent() != null)
             {
-                node.parent().removeChild(node);
+                e.parent().removeChild(e);
             }
 
-            node.parent(this);
+            e.parent(this);
+            this._arg_.add(e);
         }
-
-        this._lColchete_ = node;
-    }
-
-    public PListaArgs getListaArgs()
-    {
-        return this._listaArgs_;
-    }
-
-    public void setListaArgs(PListaArgs node)
-    {
-        if(this._listaArgs_ != null)
-        {
-            this._listaArgs_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._listaArgs_ = node;
-    }
-
-    public TRColchete getRColchete()
-    {
-        return this._rColchete_;
-    }
-
-    public void setRColchete(TRColchete node)
-    {
-        if(this._rColchete_ != null)
-        {
-            this._rColchete_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._rColchete_ = node;
     }
 
     @Override
@@ -155,9 +97,7 @@ public final class AChamada extends PChamada
     {
         return ""
             + toString(this._idFuncao_)
-            + toString(this._lColchete_)
-            + toString(this._listaArgs_)
-            + toString(this._rColchete_);
+            + toString(this._arg_);
     }
 
     @Override
@@ -170,21 +110,8 @@ public final class AChamada extends PChamada
             return;
         }
 
-        if(this._lColchete_ == child)
+        if(this._arg_.remove(child))
         {
-            this._lColchete_ = null;
-            return;
-        }
-
-        if(this._listaArgs_ == child)
-        {
-            this._listaArgs_ = null;
-            return;
-        }
-
-        if(this._rColchete_ == child)
-        {
-            this._rColchete_ = null;
             return;
         }
 
@@ -201,22 +128,22 @@ public final class AChamada extends PChamada
             return;
         }
 
-        if(this._lColchete_ == oldChild)
+        for(ListIterator<PArg> i = this._arg_.listIterator(); i.hasNext();)
         {
-            setLColchete((TLColchete) newChild);
-            return;
-        }
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PArg) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
 
-        if(this._listaArgs_ == oldChild)
-        {
-            setListaArgs((PListaArgs) newChild);
-            return;
-        }
-
-        if(this._rColchete_ == oldChild)
-        {
-            setRColchete((TRColchete) newChild);
-            return;
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
         throw new RuntimeException("Not a child.");
