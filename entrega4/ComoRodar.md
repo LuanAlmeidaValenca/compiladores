@@ -13,7 +13,7 @@ javac --version
 - Para finalizar, compile o java com:
 
 ```bash
-javac quinas/lexer/*.java quinas/node/*.java Main.java
+javac Main.java quinas/lexer/*.java quinas/parser/*.java quinas/node/*.java quinas/analysis/*.java
 ```
 
 ## 2. Sable
